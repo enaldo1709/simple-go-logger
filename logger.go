@@ -1,6 +1,8 @@
 package log
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"runtime"
@@ -27,6 +29,14 @@ func Error(elem ...any) {
 
 func Err(err error) string {
 	return fmt.Sprintf("\n%s-> %+v %s", Red, err, Reset)
+}
+
+func Any(v any) string {
+	content := new(bytes.Buffer)
+	if err := json.NewEncoder(content).Encode(v); err != nil {
+		return fmt.Sprintf("\n%s%v%s", Cyan, v, Reset)
+	}
+	return fmt.Sprintf("\n%s%s%s", Cyan, content.String(), Reset)
 }
 
 func printLog(level, nextColor string, elem []any) {
